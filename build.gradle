@@ -40,6 +40,7 @@ dependencies {
 
 	//http requeset 모듈
 	//compile 'org.springframework.boot:spring-boot-starter-webflux'
+	implementation 'org.json:json:20200518'//json파싱
 }
 
 tasks.named('test') {
