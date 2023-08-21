@@ -22,10 +22,11 @@ public class MatchRepository {
     }
     public boolean find(String id){
 
-        if(em.find(Math.class,id)==null)
+        if(em.find(Match.class,id)==null)
             return false;
         else {
             return true;
         }
     }
+
 }

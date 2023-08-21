@@ -1,6 +1,8 @@
 package davidparkk.demo.service;
 
+import davidparkk.demo.domain.Match;
 import davidparkk.demo.domain.members.Member;
+import davidparkk.demo.repository.MatchRepository;
 import davidparkk.demo.repository.MemberRepository;
 import davidparkk.demo.repository.RiotApiRepository;
 import lombok.RequiredArgsConstructor;
@@ -31,6 +33,7 @@ public class MemberService {
 
     private final MemberRepository memberRepository;
     private final RiotApiRepository riotApiRepository;
+    private final MatchService matchService;
 
     public void addMember(String nickname){
         String puuid=riotApiRepository.getPuuid(nickname);
@@ -46,6 +49,14 @@ public class MemberService {
     }
     public void updateData(){
         List<Member>members =memberRepository.findALl();
-
+        for (Member member : members) {
+            //member가 참여한 대전id이  저장
+            //member에서 대전 id를 array로 받아오면 match에 넘겨서 match에서 다시 member 로 저장??
+            List<String> matchs=riotApiRepository.getMatchIds(member.getPuuid());
+            for (String match : matchs) {
+                matchService.addMatch(match);
+            }
+        }
     }
+
 }

@@ -22,9 +22,10 @@ public class MemberServiceTest {
     MemberService memberService;
     @Autowired
     MemberRepository memberRepository;
+
     @Test
     @Transactional
-    @Rollback(false)
+    //@Rollback(true)
     public void addMember() {
         String nickname="풀뚜껑먹어라";
         memberService.addMember(nickname);
@@ -37,13 +38,21 @@ public class MemberServiceTest {
 
     @Test
     @Transactional
-    @Rollback(false)
+    //@Rollback(false)
     public void addMember2() {
-
 
         String nickname="풀뚜1껑먹어라";
         memberService.addMember(nickname);
         Member findMember=memberRepository.findOne(nickname);
         Assertions.assertThat(findMember).isNull();
+    }
+
+    @Test
+    @Transactional
+    //@Rollback(false)
+    public void getMatchTest(){
+        String nickname="풀뚜껑먹어라";
+        memberService.addMember(nickname);
+        memberService.updateData();
     }
 }
