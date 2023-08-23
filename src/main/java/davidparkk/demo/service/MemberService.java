@@ -2,6 +2,7 @@ package davidparkk.demo.service;
 
 import davidparkk.demo.domain.Match;
 import davidparkk.demo.domain.members.Member;
+import davidparkk.demo.domain.members.MemberDetail;
 import davidparkk.demo.repository.MatchRepository;
 import davidparkk.demo.repository.MemberRepository;
 import davidparkk.demo.repository.RiotApiRepository;
@@ -35,16 +36,17 @@ public class MemberService {
     private final RiotApiRepository riotApiRepository;
     private final MatchService matchService;
 
-    public void addMember(String nickname){
+    public Boolean addMember(String nickname){
         String puuid=riotApiRepository.getPuuid(nickname);
         if(puuid=="fail"){
-
+            return false;
         }
         else {
 
             Member member = new Member(nickname, puuid, "null");
-            memberRepository.save(member);
 
+            memberRepository.save(member);
+            return true;
         }
     }
     public void updateData(){

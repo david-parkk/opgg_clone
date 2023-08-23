@@ -32,11 +32,11 @@ public class MemberPlay {
 
     }
 
-    public void addInfo(int playTime,int enterTime,int winGame,int lostGame){
+    public void update(int playTime,int enterTime,int winGame,int lostGame){
         this.playTime+=playTime;
         this.enterTime+=enterTime;
-        this.winGame++;
-        this.lostGame++;
+        this.winGame+=winGame;
+        this.lostGame+=lostGame;
     }
 
 }

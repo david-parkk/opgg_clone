@@ -27,4 +27,11 @@ public class MemberDetail {
         this.dealing=0;
         this.demaged=0;
     }
+
+    public void update(int kill,int death,int dealing,int demaged){
+        this.kill+=kill;
+        this.death+=death;
+        this.dealing+=dealing;
+        this.demaged+=demaged;
+    }
 }

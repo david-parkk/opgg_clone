@@ -19,6 +19,8 @@ public class MatchService {
     private final MatchRepository matchRepository;
     private final RiotApiRepository riotApiRepository;
     private final MemberDetailService memberDetailService;
+    private final MemberPlayService memberPlayService;
+
     public MatchStruct parsingInfo(String matchInfo){
         MatchStruct matchStruct=new MatchStruct();
         JSONObject jsonObject1=new JSONObject(matchInfo);
@@ -45,13 +47,19 @@ public class MatchService {
         }
         return matchStruct;
     }
+    @Transactional(readOnly = true)
     public void addMatch(String matchId){
         if(!matchRepository.find(matchId)){
             Match match=new Match(matchId);
             matchRepository.save(match);
             String matchDetail=riotApiRepository.getMatchInfo(matchId);
             MatchStruct matchStruct=parsingInfo(matchDetail);
-
+            for(int i=0;i<matchStruct.dealings.size();i++) {
+                memberDetailService.updateInfo(matchStruct.nicknames.get(i),matchStruct.kills.get(i),matchStruct.deaths.get(i),matchStruct.dealings.get(i),matchStruct.demageds.get(i));
+                int win=(matchStruct.wins.get(i))? 1 : 0;;
+                int lose=(!matchStruct.wins.get(i))? 1 : 0;;
+                memberPlayService.updateInfo(matchStruct.nicknames.get(i),matchStruct.getPlayTime(),1,win,lose);
+            }
             //여기서 정보 받고 detail,play service로 넘김
         }
     }

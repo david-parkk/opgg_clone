@@ -5,6 +5,7 @@ import davidparkk.demo.repository.MemberRepository;
 import org.assertj.core.api.Assertions;
 import org.junit.Test;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,13 +22,18 @@ public class MemberServiceTest {
     @Autowired
     MemberService memberService;
     @Autowired
+    MemberDetailService memberDetailService;
+    @Autowired
+    MemberPlayService memberPlayService;
+    @Autowired
     MemberRepository memberRepository;
+
 
     @Test
     @Transactional
     //@Rollback(true)
     public void addMember() {
-        String nickname="풀뚜껑먹어라";
+        String nickname="오마넌주세요";
         memberService.addMember(nickname);
         Member findMember=memberRepository.findOne(nickname);
         Assertions.assertThat(findMember.getNickname()).isEqualTo(nickname);
@@ -49,10 +55,13 @@ public class MemberServiceTest {
 
     @Test
     @Transactional
-    //@Rollback(false)
+    @Rollback(false)
     public void getMatchTest(){
-        String nickname="풀뚜껑먹어라";
-        memberService.addMember(nickname);
+        String nickname="감귤맥주";
+        if(memberService.addMember(nickname)==true){
+            memberDetailService.addMember(nickname);
+            memberPlayService.addMember(nickname);
+        }
         memberService.updateData();
     }
 }

@@ -17,8 +17,6 @@ public class MemberDetailRepository {
     public void save(MemberDetail memberDetail){
 
         em.persist(memberDetail);
-        em.flush();
-        em.close();
     }
     public MemberDetail findOne(String nickname){
         return em.find(MemberDetail.class,nickname);
@@ -27,6 +25,10 @@ public class MemberDetailRepository {
         else {
             return true;
         }*/
+    }
+    public void updateOne(String nickname,int kill,int death,int dealing,int demaged){
+        MemberDetail memberDetail=this.findOne(nickname);
+        memberDetail.update(kill, death, dealing, demaged);
     }
 
 }
