@@ -63,7 +63,7 @@ public class MemberServiceTest {
             memberPlayService.addMember(nickname1);
         }
 
-        String nickname2="풀뚜껑먹어라";
+        String nickname2="왓 떠";
         if(memberService.addMember(nickname2)==true){
             memberDetailService.addMember(nickname2);
             memberPlayService.addMember(nickname2);

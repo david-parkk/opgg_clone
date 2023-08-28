@@ -25,9 +25,11 @@ public class MatchService {
         MatchStruct matchStruct=new MatchStruct();
         JSONObject jsonObject1=new JSONObject(matchInfo);
         JSONObject jsonObject2=(JSONObject) jsonObject1.get("info");
+        matchStruct.gameMode=(String)jsonObject2.get("gameMode");
         matchStruct.playTime=(int)jsonObject2.get("gameDuration");
         JSONArray jsonArray=(JSONArray)(jsonObject2.get("participants"));
-        for(int i=0; i<10; i++){
+
+        for(int i=0; i<jsonArray.length(); i++){
             JSONObject jsonObj = (JSONObject)jsonArray.get(i);
             //String nickname=(String)jsonObj.get("summonerName");
             //System.out.println((String)jsonObj.get("summonerName"));
@@ -61,7 +63,8 @@ public class MatchService {
                 }
 
             }
-            if (count <2)
+            System.out.println("========"+matchStruct.getGameMode());
+            if (count <2||!matchStruct.getGameMode().equals("CLASSIC"))
                 return;
             for(int i=0;i<matchStruct.dealings.size();i++) {
                 if(!memberDetailService.isMember(matchStruct.getNicknames().get(i))) {

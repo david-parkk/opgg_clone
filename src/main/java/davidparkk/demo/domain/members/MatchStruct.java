@@ -15,6 +15,7 @@ public class MatchStruct {
     public List<Boolean>wins;
 
     public int playTime;
+    public String gameMode;
     public MatchStruct(){
         this.nicknames = new ArrayList<>();
         this.kills = new ArrayList<>();
