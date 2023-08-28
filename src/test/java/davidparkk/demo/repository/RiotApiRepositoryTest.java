@@ -20,6 +20,6 @@ public class RiotApiRepositoryTest {
     public void MatchTest() throws Exception {
         String matchId="KR_6661021821";
         //System.out.println(riotApiRepository.getMatchInfo(matchId));
-        riotApiRepository.getMatchInfo(matchId);
+        String matchInfo=riotApiRepository.getMatchInfo(matchId);
     }
 }

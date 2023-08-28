@@ -57,11 +57,19 @@ public class MemberServiceTest {
     @Transactional
     @Rollback(false)
     public void getMatchTest(){
-        String nickname="감귤맥주";
-        if(memberService.addMember(nickname)==true){
-            memberDetailService.addMember(nickname);
-            memberPlayService.addMember(nickname);
+        String nickname1="오마넌주세요";
+        if(memberService.addMember(nickname1)==true){
+            memberDetailService.addMember(nickname1);
+            memberPlayService.addMember(nickname1);
         }
+
+        String nickname2="풀뚜껑먹어라";
+        if(memberService.addMember(nickname2)==true){
+            memberDetailService.addMember(nickname2);
+            memberPlayService.addMember(nickname2);
+        }
+
+
         memberService.updateData();
     }
 }

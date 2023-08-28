@@ -29,32 +29,44 @@ public class MatchService {
         JSONArray jsonArray=(JSONArray)(jsonObject2.get("participants"));
         for(int i=0; i<10; i++){
             JSONObject jsonObj = (JSONObject)jsonArray.get(i);
-            String nickname=(String)jsonObj.get("summonerName");
+            //String nickname=(String)jsonObj.get("summonerName");
             //System.out.println((String)jsonObj.get("summonerName"));
-            if(memberDetailService.isMember(nickname)){
-                matchStruct.nicknames.add(nickname);
 
-                matchStruct.kills.add((int)jsonObj.get("kills"));
-                matchStruct.deaths.add((int)jsonObj.get("deaths"));
-                matchStruct.dealings.add((int)jsonObj.get("totalDamageDealtToChampions"));
-                matchStruct.demageds.add((int)jsonObj.get("totalDamageTaken"));
-                matchStruct.wins.add((boolean)jsonObj.get("win"));
-                System.out.println((String)jsonObj.get("summonerName")+"찾음!!!");
-            }
-            else{
-                System.out.println((String)jsonObj.get("summonerName")+"못찾음!!!");
-            }
+            matchStruct.nicknames.add((String) jsonObj.get("summonerName"));
+
+            matchStruct.kills.add((int)jsonObj.get("kills"));
+            matchStruct.deaths.add((int)jsonObj.get("deaths"));
+            matchStruct.dealings.add((int)jsonObj.get("totalDamageDealtToChampions"));
+            matchStruct.demageds.add((int)jsonObj.get("totalDamageTaken"));
+            matchStruct.wins.add((boolean)jsonObj.get("win"));
+            //System.out.println((String)jsonObj.get("summonerName")+"찾음!!!");
+
+            //System.out.println((String)jsonObj.get("summonerName")+"못찾음!!!");
+
         }
         return matchStruct;
     }
     @Transactional(readOnly = true)
     public void addMatch(String matchId){
         if(!matchRepository.find(matchId)){
+
             Match match=new Match(matchId);
             matchRepository.save(match);
             String matchDetail=riotApiRepository.getMatchInfo(matchId);
             MatchStruct matchStruct=parsingInfo(matchDetail);
+            int count =0;
+            for(int i=0;i<matchStruct.getNicknames().size();i++) {
+                if(memberDetailService.isMember(matchStruct.getNicknames().get(i))){
+                    count++;
+                }
+
+            }
+            if (count <2)
+                return;
             for(int i=0;i<matchStruct.dealings.size();i++) {
+                if(!memberDetailService.isMember(matchStruct.getNicknames().get(i))) {
+                    continue;
+                }
                 memberDetailService.updateInfo(matchStruct.nicknames.get(i),matchStruct.kills.get(i),matchStruct.deaths.get(i),matchStruct.dealings.get(i),matchStruct.demageds.get(i));
                 int win=(matchStruct.wins.get(i))? 1 : 0;;
                 int lose=(!matchStruct.wins.get(i))? 1 : 0;;

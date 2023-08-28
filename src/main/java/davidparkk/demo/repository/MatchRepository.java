@@ -14,8 +14,11 @@ public class MatchRepository {
     private final EntityManager em;
 
     public void save(Match match){
+
         em.persist(match);
     }
+    //여기서 2명이상인지 확인하기
+
     public Match findOne(String id) {
         return em.find(Match.class,id);
 

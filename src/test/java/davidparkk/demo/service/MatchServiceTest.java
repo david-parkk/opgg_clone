@@ -9,6 +9,7 @@ import davidparkk.demo.repository.RiotApiRepository;
 import org.assertj.core.api.Assertions;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.springframework.aop.scope.ScopedProxyUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
@@ -47,5 +48,23 @@ public class MatchServiceTest {
         Assertions.assertThat(matchStruct.deaths.get(0)).isEqualTo(5);
         Assertions.assertThat(matchStruct.demageds.get(0)).isEqualTo(17998);
         Assertions.assertThat(matchStruct.dealings.get(0)).isEqualTo(6390);
+    }
+
+    @Test
+    @Transactional
+    public void parsingTest() {
+        //given
+        String nickname1="풀뚜껑먹어라" ;
+        MemberDetail memberDetail=new MemberDetail(nickname1);
+        memberDetailRepository.save(memberDetail);
+        String matchId="KR_6661021821";
+        //when
+        String matchInfo=riotApiRepository.getMatchInfo(matchId);
+        MatchStruct matchStruct=matchService.parsingInfo(matchInfo);
+        //then
+        for(int i=0;i<10;i++){
+            System.out.println(matchStruct.getNicknames().get(i));
+        }
+
     }
 }
