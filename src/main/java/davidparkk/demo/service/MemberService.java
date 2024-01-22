@@ -1,64 +1,63 @@
 package davidparkk.demo.service;
 
-import davidparkk.demo.domain.Match;
 import davidparkk.demo.domain.members.Member;
 import davidparkk.demo.domain.members.MemberDetail;
-import davidparkk.demo.repository.MatchRepository;
+import davidparkk.demo.domain.members.MemberPlay;
+import davidparkk.demo.domain.riotApi.Participant;
+import davidparkk.demo.domain.riotApi.Summoner;
+import davidparkk.demo.repository.MemberDetailRepository;
+import davidparkk.demo.repository.MemberPlayRepository;
 import davidparkk.demo.repository.MemberRepository;
-import davidparkk.demo.repository.RiotApiRepository;
+import davidparkk.demo.riotApi.RiotApiRepository;
 import lombok.RequiredArgsConstructor;
-import net.bytebuddy.dynamic.scaffold.MethodGraph;
-import org.json.JSONObject;
-import org.springframework.aop.scope.ScopedProxyUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.*;
-import org.springframework.http.server.reactive.HttpHandler;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.LinkedMultiValueMap;
-import org.springframework.util.MultiValueMap;
-import org.springframework.util.concurrent.ListenableFuture;
-import org.springframework.web.client.AsyncRestTemplate;
-import org.springframework.web.client.RestTemplate;
 
-import java.net.http.HttpClient;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.ExecutionException;
+import java.util.Map;
 //import java.net.http.HttpHeaders;
 
 @Service
-@Transactional(readOnly = true)
+@Transactional(readOnly = false)
 @RequiredArgsConstructor
 public class MemberService {
 
 
-    private final MemberRepository memberRepository;
-    private final RiotApiRepository riotApiRepository;
-    private final MatchService matchService;
+    public final MemberRepository memberRepository;
+    public final RiotApiRepository riotApiRepository;
+    public final MemberDetailRepository memberDetailRepository;
+    public final MemberPlayRepository memberPlayRepository;
 
-    public Boolean addMember(String nickname){
-        String puuid=riotApiRepository.getPuuid(nickname);
-        if(puuid=="fail"){
-            return false;
-        }
-        else {
+    public void addMember(String summoner){
+        if(memberRepository.alreadySave(summoner))
+            return;
+        Summoner summonerInfo = riotApiRepository.getSummonerInfo(summoner);
+        Member member=new Member(summonerInfo.getName(),0,summonerInfo.getPuuid(),summonerInfo.getProfileIconId());
 
-            Member member = new Member(nickname, puuid, "null");
+        MemberDetail memberDetail=new MemberDetail(member);
+        MemberPlay memberPlay=new MemberPlay(member);
+        member.setMemberInfo(memberDetail,memberPlay);
+        memberPlayRepository.save(memberPlay);
+        memberDetailRepository.save(memberDetail);
+        memberRepository.save(member);
 
-            memberRepository.save(member);
-            return true;
-        }
+
     }
-    public void updateData(){
-        List<Member>members =memberRepository.findALl();
-        for (Member member : members) {
-            //member가 참여한 대전id이  저장
-            //member에서 대전 id를 array로 받아오면 match에 넘겨서 match에서 다시 member 로 저장??
-            List<String> matchs=riotApiRepository.getMatchIds(member.getPuuid());
-            for (String match : matchs) {
-                matchService.addMatch(match);
-            }
+
+    public List<Member> getValidSummoner(Map<String, Participant> participantMap){
+        List<Member>validSummonerList=new ArrayList<>();
+        for (String summoner : participantMap.keySet()) {
+            Member member=memberRepository.findOneBySummoner(summoner);
+            if(member==null)
+                continue;
+            validSummonerList.add(member);
+
         }
+        return validSummonerList;
     }
+
+
 
 }

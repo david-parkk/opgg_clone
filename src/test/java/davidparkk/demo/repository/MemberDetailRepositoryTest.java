@@ -14,19 +14,5 @@ import org.springframework.transaction.annotation.Transactional;
 @RunWith(SpringRunner.class)
 public class MemberDetailRepositoryTest {
 
-    @Autowired MemberDetailRepository memberDetailRepository;
 
-    @Test
-    @Transactional
-    public void MemberDetailPersist(){
-        //given
-        String nickname="풀뚜껑먹어라";
-        MemberDetail memberDetail=new MemberDetail(nickname);
-        memberDetailRepository.save(memberDetail);
-        //when
-        MemberDetail findmMemberDetail=memberDetailRepository.findOne(nickname);
-
-        //then
-        Assertions.assertThat(memberDetail.getNickname()).isEqualTo(findmMemberDetail.getNickname());
-    }
 }

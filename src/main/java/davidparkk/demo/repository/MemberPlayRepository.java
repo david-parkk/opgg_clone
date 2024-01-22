@@ -5,7 +5,7 @@ import davidparkk.demo.domain.members.MemberPlay;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
-import javax.persistence.EntityManager;
+import jakarta.persistence.EntityManager;
 
 @Repository
 @RequiredArgsConstructor
@@ -15,17 +15,12 @@ public class MemberPlayRepository {
 
     public void save(MemberPlay memberPlay){
         em.persist(memberPlay);
-        em.flush();
-        em.close();
     }
 
-    public MemberPlay findOne(String nickname){
-        return em.find(MemberPlay.class,nickname);
+    public MemberPlay findOne(int id){
+        return em.find(MemberPlay.class,id);
     }
 
 
-    public void updateOne(String name,int playTime,int enterTime,int windGame,int lostGame){
-        MemberPlay memberPlay=this.findOne(name);
-        memberPlay.update(playTime,enterTime,windGame,lostGame);
-    }
+
 }

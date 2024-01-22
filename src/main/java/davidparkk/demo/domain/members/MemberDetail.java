@@ -1,37 +1,45 @@
 package davidparkk.demo.domain.members;
 
+import davidparkk.demo.domain.riotApi.Participant;
+import jakarta.persistence.*;
 import lombok.Getter;
-
-import javax.persistence.Entity;
-import javax.persistence.Id;
 
 @Entity
 @Getter
 public class MemberDetail {
+
     @Id
-    private String nickname;
-
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private int id;
+    @Column(name = "kills")
     private int kill;
-    private int death;
-    private int dealing;
-    private int demaged;
 
+    private int death;
+    private int damage;
+    private int damagedTaken;
+
+    @OneToOne(mappedBy = "memberDetail", fetch = FetchType.LAZY)
+    private Member member;
 
     public MemberDetail(){
-
-    }
-    public MemberDetail(String nickname){
-        this.nickname=nickname;
         this.kill=0;
         this.death=0;
-        this.dealing=0;
-        this.demaged=0;
+        this.damage=0;
+        this.damagedTaken=0;
+    }
+    public MemberDetail(Member member){
+        this.member=member;
+        this.kill=0;
+        this.death=0;
+        this.damage=0;
+        this.damagedTaken=0;
     }
 
-    public void update(int kill,int death,int dealing,int demaged){
-        this.kill+=kill;
-        this.death+=death;
-        this.dealing+=dealing;
-        this.demaged+=demaged;
+    public void update(Participant participant){
+        this.kill+=participant.getKill();
+        this.death+=participant.getDeath();
+        this.damage+=participant.getDamage();
+        this.damagedTaken+=participant.getDamageTaken();
+
     }
 }

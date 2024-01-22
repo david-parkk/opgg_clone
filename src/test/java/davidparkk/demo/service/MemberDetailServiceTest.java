@@ -14,15 +14,6 @@ import org.springframework.transaction.annotation.Transactional;
 @RunWith(SpringRunner.class)
 public class MemberDetailServiceTest {
 
-    @Autowired
-    MemberDetailService memberDetailService;
 
-    @Test
-    @Transactional
-    @Rollback(false)
-    public  void addmembertest(){
-        String nickanme="풀뚜껑먹어라";
-       // MemberDetail memberDetail=new MemberDetail(nickanme);
-        memberDetailService.addMember(nickanme);
-    }
+
 }

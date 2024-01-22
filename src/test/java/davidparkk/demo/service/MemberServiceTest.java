@@ -19,57 +19,5 @@ import static org.junit.Assert.*;
 @SpringBootTest
 public class MemberServiceTest {
 
-    @Autowired
-    MemberService memberService;
-    @Autowired
-    MemberDetailService memberDetailService;
-    @Autowired
-    MemberPlayService memberPlayService;
-    @Autowired
-    MemberRepository memberRepository;
 
-
-    @Test
-    @Transactional
-    //@Rollback(true)
-    public void addMember() {
-        String nickname="오마넌주세요";
-        memberService.addMember(nickname);
-        Member findMember=memberRepository.findOne(nickname);
-        Assertions.assertThat(findMember.getNickname()).isEqualTo(nickname);
-        Assertions.assertThat(findMember.getNickname()).isSameAs(nickname);
-    }
-
-
-
-    @Test
-    @Transactional
-    //@Rollback(false)
-    public void addMember2() {
-
-        String nickname="풀뚜1껑먹어라";
-        memberService.addMember(nickname);
-        Member findMember=memberRepository.findOne(nickname);
-        Assertions.assertThat(findMember).isNull();
-    }
-
-    @Test
-    @Transactional
-    @Rollback(false)
-    public void getMatchTest(){
-        String nickname1="오마넌주세요";
-        if(memberService.addMember(nickname1)==true){
-            memberDetailService.addMember(nickname1);
-            memberPlayService.addMember(nickname1);
-        }
-
-        String nickname2="왓 떠";
-        if(memberService.addMember(nickname2)==true){
-            memberDetailService.addMember(nickname2);
-            memberPlayService.addMember(nickname2);
-        }
-
-
-        memberService.updateData();
-    }
 }

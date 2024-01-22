@@ -1,40 +1,60 @@
 package davidparkk.demo.domain.members;
 
+import davidparkk.demo.service.MemberService;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import org.springframework.context.annotation.Primary;
 
 @Entity
 @Getter
 public class Member {
 
     @Id
-    private String nickname;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private int id;
 
-    private Long medel;
+    private String summoner;
+
+    private int medal;
 
     private String puuid;
 
+    private String profileIconId;
 
-    private String img_url;
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn
+    private MemberPlay memberPlay;
+
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn
+    private MemberDetail memberDetail;
+
     public Member(){
 
     }
-    public Member(String nickname,String puuid,String img_url){
-        this.nickname=nickname;
-        this.puuid=puuid;
-        this.img_url=img_url;
-        this.medel=0L;
 
+    public void setSummoner(String summoner) {
+        this.summoner = summoner;
+    }
+
+    public Member(String summoner, int medal, String puuid, String profileIconId) {
+        this.summoner = summoner;
+        this.medal = medal;
+        this.puuid = puuid;
+        this.profileIconId = profileIconId;
+    }
+
+    public void setMemberInfo(MemberDetail memberDetail, MemberPlay memberPlay){
+        this.memberDetail=memberDetail;
+        this.memberPlay=memberPlay;
     }
     public void setImg_url(String img_url){
-        this.img_url=img_url;
+        this.profileIconId=profileIconId;
     }
     public void addMedal(){
-        this.medel++;
+        this.medal++;
         return;
     }
 

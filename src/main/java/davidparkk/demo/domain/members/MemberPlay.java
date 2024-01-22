@@ -1,42 +1,53 @@
 package davidparkk.demo.domain.members;
 
+import davidparkk.demo.domain.riotApi.Info;
+import davidparkk.demo.domain.riotApi.Participant;
+import jakarta.persistence.*;
 import lombok.Getter;
-
-import javax.persistence.Entity;
-import javax.persistence.Id;
 
 @Entity
 @Getter
 public class MemberPlay {
 
     @Id
-    private String nickname;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private int id;
 
-    private int playTime;//함께 플레이 시간
+    private long playTime;//함께 플레이 시간
 
-    private int enterTime;//함께 참여한 횟수
+    private long enterTime;//함께 참여한 횟수
 
     private int winGame;
 
     private int lostGame;
+
+    @OneToOne(mappedBy = "memberPlay", fetch = FetchType.LAZY)
+    private Member member;
+
     public MemberPlay(){
-
-    }
-
-    public MemberPlay(String nickname){
-        this.nickname=nickname;
         this.playTime=0;
         this.enterTime=0;
         this.winGame=0;
         this.lostGame=0;
-
+    }
+    public MemberPlay(Member member){
+        this.member=member;
+        this.playTime=0;
+        this.enterTime=0;
+        this.winGame=0;
+        this.lostGame=0;
     }
 
-    public void update(int playTime,int enterTime,int winGame,int lostGame){
-        this.playTime+=playTime;
-        this.enterTime+=enterTime;
-        this.winGame+=winGame;
-        this.lostGame+=lostGame;
+    public void updateWinOrLose(Participant participant){
+        boolean win=participant.isWin();
+        if(win)
+            this.winGame++;
+        else
+            this.lostGame++;
+    }
+    public void updateTime(Info info){
+        this.playTime=info.getPlayTime();
+        this.enterTime=info.getPlayTime();
     }
 
 }

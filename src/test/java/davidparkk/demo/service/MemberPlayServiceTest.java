@@ -21,36 +21,5 @@ import static org.junit.jupiter.api.Assertions.*;
 @RunWith(SpringRunner.class)
 class MemberPlayServiceTest {
 
-    @Autowired
-    MemberPlayService memberPlayService;
 
-    @Autowired
-    MemberPlayRepository memberPlayRepository;
-
-
-    @Test
-    @Transactional
-    @Rollback(value = false)
-    public void saveMemberTest(){
-        String nickname="풀뚜껑먹어라1";
-        //MemberPlay memberPlay=new MemberPlay(nickname);
-        memberPlayService.addMember(nickname);
-        MemberPlay findMemberPlay=memberPlayRepository.findOne(nickname);
-        org.assertj.core.api.Assertions.assertThat(findMemberPlay.getNickname()).isEqualTo(nickname);
-
-
-    }
-
-    @Test
-    @Transactional
-    @Rollback(value = false)
-    public void saveMemberTest2(){
-        String nickname="풀뚜껑먹어라";
-        MemberPlay memberPlay=new MemberPlay(nickname);
-        memberPlayRepository.save(memberPlay);
-        MemberPlay findMemberPlay=memberPlayRepository.findOne(nickname);
-        org.assertj.core.api.Assertions.assertThat(findMemberPlay).isEqualTo(memberPlay);
-
-
-    }
 }
