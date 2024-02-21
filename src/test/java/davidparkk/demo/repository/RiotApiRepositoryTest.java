@@ -10,6 +10,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import java.util.List;
+
 @RunWith(SpringRunner.class)
 @SpringBootTest
 public class RiotApiRepositoryTest {
@@ -27,8 +29,8 @@ public class RiotApiRepositoryTest {
     public void getGameIdList(){
         String puuid="7VJVqyqgvJ4WXiRafcaQMRIRJkIywU7FAe8FTrrlp2AemwVZVSb0BVn6C9xA9JG1HG6azgW2jiL13w";
         int count=10;
-        String[] strings= riotApiRepository.getGameIdList(puuid,count);
-        Assertions.assertThat(strings.length).isEqualTo(count);
+        List<String> stringList =riotApiRepository.getGameIdList(puuid,count);
+        Assertions.assertThat(stringList.size()).isEqualTo(count);
     }
     @Test
     public void getGameInfo(){

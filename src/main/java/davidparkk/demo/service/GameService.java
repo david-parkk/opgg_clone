@@ -1,10 +1,10 @@
 package davidparkk.demo.service;
 
-import davidparkk.demo.domain.members.Match;
+import davidparkk.demo.domain.members.Matching;
 import davidparkk.demo.domain.members.Member;
 import davidparkk.demo.domain.riotApi.Game;
 import davidparkk.demo.domain.riotApi.Participant;
-import davidparkk.demo.repository.MatchRepository;
+import davidparkk.demo.repository.MatchingRepository;
 import davidparkk.demo.repository.MemberRepository;
 import davidparkk.demo.riotApi.RiotApiRepository;
 import lombok.RequiredArgsConstructor;
@@ -23,18 +23,12 @@ public class GameService {
     public final RiotApiRepository riotApiRepository;
     public final MemberService memberService;
     public final MemberRepository memberRepository;
-    public final MatchRepository matchRepository;
+    public final MatchingRepository matchRepository;
+
 
     @Transactional
-    public void updateMemberInfo(String summoner){
-        String puuid = memberRepository.getPuuidBySummoner(summoner);
-        String[] gameList= riotApiRepository.getGameIdList(puuid,1);
-        for (String gameId : gameList) {
-            Optional<Match> match = matchRepository.findById(gameId);
-            if(match.isPresent())
-                continue;
-            matchRepository.save(match.get());
-            Game game = riotApiRepository.getGameInfo(gameId);
+    public void updateMemberInfo(String MatchingId){
+            Game game = riotApiRepository.getGameInfo(MatchingId);
 
             for (Participant participant1 : game.getInfo().getParticipants()) {
                 System.out.println(participant1.toString());
@@ -51,7 +45,7 @@ public class GameService {
                 member.getMemberPlay().updateTime(game.getInfo());
                 member.getMemberPlay().updateWinOrLose(participant);
             }
-        }
+
     }
 
 }

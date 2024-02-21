@@ -58,6 +58,9 @@ public class MemberService {
         return validSummonerList;
     }
 
+    public String getPuuidBySummoner(String summonter){
+        return memberRepository.getPuuidBySummoner(summonter);
+    }
 
 
 }

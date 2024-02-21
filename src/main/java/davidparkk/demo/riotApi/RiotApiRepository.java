@@ -11,6 +11,9 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
 
+import java.util.Arrays;
+import java.util.List;
+
 @Repository
 @RequiredArgsConstructor
 public class RiotApiRepository {
@@ -26,9 +29,10 @@ public class RiotApiRepository {
         return restTemplate.getForEntity(url, Summoner.class).getBody();
     }
 
-    public String[] getGameIdList(String puuid,int count){
+    public List<String> getGameIdList(String puuid, int count){
         String url = "https://asia.api.riotgames.com/lol/match/v5/matches/by-puuid/"+puuid+"/ids?start=0&count="+count+"&api_key="+apiKey;
-        return restTemplate.getForEntity(url, String[].class).getBody();
+        String[] strings = restTemplate.getForEntity(url, String[].class).getBody();
+        return Arrays.asList(strings);
         //string 배열로 꼭 써야할까?
     }
 
