@@ -1,8 +1,10 @@
 package davidparkk.demo.service;
 
+import davidparkk.demo.domain.members.Match;
 import davidparkk.demo.domain.members.Member;
 import davidparkk.demo.domain.riotApi.Game;
 import davidparkk.demo.domain.riotApi.Participant;
+import davidparkk.demo.repository.MatchRepository;
 import davidparkk.demo.repository.MemberRepository;
 import davidparkk.demo.riotApi.RiotApiRepository;
 import lombok.RequiredArgsConstructor;
@@ -11,6 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 @Service
 @Transactional(readOnly = true)
@@ -20,13 +23,17 @@ public class GameService {
     public final RiotApiRepository riotApiRepository;
     public final MemberService memberService;
     public final MemberRepository memberRepository;
+    public final MatchRepository matchRepository;
 
     @Transactional
     public void updateMemberInfo(String summoner){
         String puuid = memberRepository.getPuuidBySummoner(summoner);
         String[] gameList= riotApiRepository.getGameIdList(puuid,1);
         for (String gameId : gameList) {
-            System.out.println("asdfadsf");
+            Optional<Match> match = matchRepository.findById(gameId);
+            if(match.isPresent())
+                continue;
+            matchRepository.save(match.get());
             Game game = riotApiRepository.getGameInfo(gameId);
 
             for (Participant participant1 : game.getInfo().getParticipants()) {
@@ -45,9 +52,6 @@ public class GameService {
                 member.getMemberPlay().updateWinOrLose(participant);
             }
         }
-
-
-
     }
 
 }
